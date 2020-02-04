@@ -1,0 +1,153 @@
+O arquivo de configuração de rotas fica no diretorio /routes/web.php
+
+
+Comando para startar o Laravel Server
+$ php artisan Server
+
+Comando para mostrar todas as rotas criadas
+
+$ php artisan route:list
+
+Comando para mostrar todos as opções do artisan.
+
+$ php artisan
+
+Comando para criar uma clase controlador usando o Laravel.
+
+$ php artisan make:controller MeuContralador
+
+Comando para criar uma clase controlador usando o Laravel que vem com diversos metodos prontos.
+
+$ php artisan make:controller ClienteControlador --resource
+
+
+*****************************************************************************************************
+
+Neste trecho de anotação, servirá para lembrar como se passar dados do controlador para view usando alguns metodos
+prontos do Laravel, assim facilitando a utilização na parte da view
+
+ public function index()
+    {
+        // $clientes = $this->clientes;
+
+        $clientes = session('clientes');
+
+        //Passando valores para as Views
+
+        //Exemplo com passando  um array associativo
+        return view('clientes.index', ['clientes' => $clientes, 'titulo' => "Todos os Clientesss"]);
+
+
+        //Exemplo passando somente um valor utilizando o with
+        //return view('clientes.index')->with('clientes', $clientes);
+
+
+        //Exemplo passando somente diversos valores utilizando o with de modo encadeado
+        // return view('clientes.index')
+        //     ->with('clientes', $clientes)
+        //     ->with('titulo', "Todos os Clientes");
+
+
+        //Exemplo usando o compact o mesmo modo do array associativo, mas a propria função transforma os dados em array associativos
+        // return view('clientes.index', compact(['clientes']));
+        //Outro exemplo passando mais valores
+        //$ titulo = "Todos os clientes";
+        // return view('clientes.index', compact(['clientes' , 'titulo']));
+    }
+
+*****************************************************************************************************
+A utilização do foreach do Laravel é simples também, como visto anteriormente o Blade facilita em muito
+no desenvolvimento, no qual podemos usar simplesmente o @ na frente de uma estrutura e a mesma funciona
+quase como se fosse magica, evitando abrir e fechar diversas tags php, além de poder usar as variaveis
+como em um arquivo .php
+Veremos um exemplo de foreach:
+
+        <ul>
+             @foreach ($clientes as $cliente)
+                <li>
+                   ID:  {{$cliente["id"]}}:
+                   Nome: {{$cliente["nome"]}}
+
+                </li>
+            @endforeach
+        </ul>
+
+Outro exemplo bem interessante é a utilização do objeto loop que quando é usado o foreach vem junto.
+nNo exemplo abaixo, podemos ver o seu funcionamento.
+
+@foreach ($clientes as $cliente)
+        <p>
+            {{$cliente['nome']}} |
+            @if ($loop->first)
+                (Primeiro) |
+            @endif
+            @if ($loop->last)
+                (Ultimo) |
+            @endif
+           Index: {{$loop->index}} | Interações: {{$loop->iteration}} | Quantidade: {{$loop->count}}
+
+        </p>
+@endforeach
+
+Neste exemplo podemos ver que ira informar quem é o ultimo e primeiro cliente desta arraylisy, como
+também o index de cada elemento, a quantidade de elemento presente neste array e as interações que o loop
+percoreu.
+
+Para ficar mais compreensivo, um exemplo de como a será printando na view:
+
+    Ricardo | (Primeiro) | Index: 0 | Interações: 1 | Quantidade: 4
+
+    Izanet | Index: 1 | Interações: 2 | Quantidade: 4
+
+    Allan | Index: 2 | Interações: 3 | Quantidade: 4
+
+    Naba | (Ultimo) | Index: 3 | Interações: 4 | Quantidade: 4
+
+*****************************************************************************************************
+
+Utilizando sintaxe do "Blade" IF e ELSE do framework Laravel
+Aparentemente é bem mais simples que se imagina, quando se fala na utilização do if e ELSE
+no Laravel, devido o Blade no qual se posibilita pegar variaveis e funções do PHP sem utilizar tags php,
+Baste ver este exemplo:
+
+<p> Todos os clientes </p>
+    @if(count($clientes) > 0 )
+        <ul>
+            @foreach ($clientes as $cliente)
+                <li>
+                   ID:  {{$cliente["id"]}}:
+                   Nome: {{$cliente["nome"]}}
+
+                </li>
+            @endforeach
+        </ul>
+    @endif
+
+Neste exemplo podemos ver que se o count do php, contar os clientes, e ver que não tem mais que 0 o mesmo não
+será exebido na view.
+
+Podemos também usar o else em nosso desenvolvimento, fazendo um desvio na estrutura.
+O exemplo abaixo podemos ver a simplicidade da estrutura:
+
+<p> Todos os clientes </p>
+    @if(count($clientes) > 0 )
+        <ul>
+            @foreach ($clientes as $cliente)
+                <li>
+                   ID:  {{$cliente["id"]}}:
+                   Nome: {{$cliente["nome"]}}
+
+                </li>
+            @endforeach
+        </ul>
+    @else
+
+    <h5>Não existem clientes cadastrados!</h5>
+
+    @endif
+
+Outra maneira de mostrar se uma variaveis está vazia é utilizando a função empty, Veremos no exemplo abaixo
+
+@empty($clientes)
+    <h5>Não existem clientes cadastrados!</h5>
+@endempty

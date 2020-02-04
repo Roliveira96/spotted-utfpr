@@ -11,6 +11,20 @@
 |
 */
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
+})->name('index');
+
+
+Route::get('/login', function () {
+    return view('admin/login')->name('login');
+});
+
+Route::prefix('/admin')->group(function(){
+
+       Route::get('/list', function () {
+        return view('list')->name('admin.lista');
+    });
+
 });
